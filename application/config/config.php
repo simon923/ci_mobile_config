@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/ci_mobile_config/application/views/mobile';
+$config['base_url'] = 'http://172.16.128.136/GitHub/ci_mobile_config/';
 
 /*
 |--------------------------------------------------------------------------

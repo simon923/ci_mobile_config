@@ -2,28 +2,34 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Console extends MY_Controller {
-
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
-
+	
 	public function __construct()
 	{
 		parent::__construct();
-		// Your own constructor code
 		$this->load->model ( 'getsqlmod' );
+	}
+
+	public function translate($country_code = 'tw')
+	{
+		$query_country = $this->getsqlmod->get_country()->result_array();
+        $data = array (
+				// 'trans_data' => $query_trans,
+				'country_data' => $query_country
+		);
+		$this->load->view('templates/header');
+		$this->load->view('mobile/translate', $data);
+		$this->load->view('templates/footer');
+	}
+
+	public function keyvalue()
+	{
+		$query = $this->getsqlmod->getkeydata()->result_array(); 
+		$data = array (
+			'data' => $query
+		);
+		$this->load->view('templates/header');
+		$this->load->view('mobile/keyvalue', $data);
+		$this->load->view('templates/footer');
 	}
 
 	public function conuntry_change()
@@ -40,32 +46,26 @@ class Console extends MY_Controller {
 		echo $data_json;
 	}
 
-	public function translation($country_code = 'tw')
-	{
-		$query_country = $this->getsqlmod->get_country()->result_array();
-        $data = array ( // 存入列陣
-				// 'trans_data' => $query_trans,
-				'country_data' => $query_country
-		);
-
-		$this->load->view('mobile/translate', $data); // 載入視界並且把資料$data丟進去
-	}
-
-	public function keyvalue()
-	{
-		$query = $this->getsqlmod->getkeydata()->result_array(); 
-		$data = array (
-			'data' => $query
-		);
-		$this->load->view('mobile/keyvalue', $data);
-	}
-
 	public function transbox()
 	{
 		$trans_id = $this->input->post('trans_id');
 
 		$query = $this->getsqlmod->getkeyIDdata($trans_id);
 		echo json_encode($query);
+	}
+
+	public function insert_app()
+	{
+		$data = array(
+			'key_en_sample' => $this->input->post('s_trans_en_sample'),
+			'key_ios_key' => $this->input->post('s_translate_ios'),
+			'key_android_key' => $this->input->post('s_translate_android'),
+			'key_create' => date("Y-m-d H:i:s"),
+			'key_modify' => date("Y-m-d H:i:s"),
+			);
+
+		$insert = $this->getsqlmod->insert_app_key($data);
+		echo json_encode($insert);
 	}
 
 	public function update_app()
@@ -80,20 +80,6 @@ class Console extends MY_Controller {
 
 		$update = $this->getsqlmod->update_app_key($id,$data);
 		echo json_encode($update);
-	}
-	
-	public function insert_app()
-	{
-		$data = array(
-			'key_en_sample' => $this->input->post('s_trans_en_sample'),
-			'key_ios_key' => $this->input->post('s_translate_ios'),
-			'key_android_key' => $this->input->post('s_translate_android'),
-			'key_create' => date("Y-m-d H:i:s"),
-			'key_modify' => date("Y-m-d H:i:s"),
-			);
-
-		$insert = $this->getsqlmod->insert_app_key($data);
-		echo json_encode($insert);
 	}
 
 	public function delete_app()
@@ -146,7 +132,6 @@ class Console extends MY_Controller {
 		}
 
 		header('Content-type: text/xml; charset=UTF-8'); 
-		//提示下载
 		header("Content-Disposition:attachement;filename=value-" . $country_code . ".xml"); 
 
 		$query = $this->getsqlmod->get_app_config($country_code)->result_array();
@@ -189,7 +174,6 @@ class Console extends MY_Controller {
 		}
 
 		header('Content-type: text/xliff; charset=UTF-8'); 
-		//提示下载
 		header("Content-Disposition:attachement;filename=" . $country_code . "-Hant.xliff"); 
 
 		$query = $this->getsqlmod->get_ios_config($country_code)->result_array();

@@ -1,10 +1,10 @@
 <?php
 class getsqlmod extends CI_Model {
 
-    function __construct() { // 建構值
-        parent::__construct(); // 改寫父親
+    function __construct() { 
+        parent::__construct(); 
         {
-            $this->load->database(); // 載入database資料庫設定
+            $this->load->database(); 
         }
     }
 
@@ -76,7 +76,7 @@ class getsqlmod extends CI_Model {
         $update = $this->db->update('cms_translation');
         if($update)
         {
-            return true;
+            return $data;
         }
         else
         {
@@ -95,11 +95,11 @@ class getsqlmod extends CI_Model {
         $insert = $this->db->insert('cms_translation', $data);
         if($insert)
         {
-            return 00;
+            return $data;
         }
         else
         {
-            return 11;
+            return false;
         }
     }
 

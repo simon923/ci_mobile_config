@@ -7,7 +7,7 @@ class MY_Controller extends CI_Controller {
 	{
 			parent::__construct();
 			// Your own constructor code
-			$this->load->model ( 'getsqlmod' );
+			$this->load->helper('url');
     }
     
 }
