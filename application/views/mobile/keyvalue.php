@@ -146,7 +146,6 @@
                   dataType : "json",
                 data:{trans_id: trans_id.value},
                   success : function(data) {
-                    console.log(data[0]);
                       $('#trans_id').html('ID:'+data[0].key_id);
                       $('#trans_en_sample').val(data[0].key_en_sample);
                       $('#translate_ios').val(data[0].key_ios_key);
